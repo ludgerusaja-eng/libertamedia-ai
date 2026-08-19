@@ -1,0 +1,47 @@
+# =======================================================================
+# LIBERTAMEDIA.COM - CPANEL & APACHE / LITESPEED CONFIGURATION
+# =======================================================================
+
+# 1. Disable directory browsing for security
+Options -Indexes
+
+# 2. cPanel Phusion Passenger (For Node.js App Mode)
+<IfModule mod_passenger.c>
+  PassengerEnabled On
+  PassengerAppType node
+  PassengerStartupFile app.js
+</IfModule>
+
+# 3. Apache & LiteSpeed SPA Rewrite Engine
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Allow direct access to real existing files or directories
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # SPA Fallback: Route all virtual routes (/admin, /login, /berita/*, etc.) to index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# 4. Correct MIME Types
+<IfModule mod_mime.c>
+  AddType application/javascript js mjs
+  AddType text/css css
+  AddType application/json json
+  AddType image/svg+xml svg svgz
+</IfModule>
+
+# 5. Browser Caching
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>

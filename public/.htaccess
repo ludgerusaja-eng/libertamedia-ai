@@ -1,0 +1,30 @@
+# =======================================================================
+# LIBERTAMEDIA.COM - CPANEL & APACHE / LITESPEED CONFIGURATION
+# =======================================================================
+
+Options -Indexes
+
+<IfModule mod_passenger.c>
+  PassengerEnabled On
+  PassengerAppType node
+  PassengerStartupFile app.js
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # SPA Fallback: Route all virtual routes (/admin, /login, /berita/*, etc.) to index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/javascript js mjs
+  AddType text/css css
+  AddType application/json json
+  AddType image/svg+xml svg svgz
+</IfModule>
